@@ -406,3 +406,142 @@ Rest API Commands:
       }
     });
   ```
+ 
+ **Create Games**
+----
+  Creates multiple new entries in the database.
+
+* **URL**
+
+  /game/createMultiple
+
+* **Method:**
+
+  `POST`
+  
+*  **URL Params**
+
+  None
+
+* **Data Params**
+
+   **Required**
+   
+  `dto=[json]`
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** `
+   None
+ 
+* **Error Response:**
+
+  * **Code:** 404 NOT FOUND <br />
+
+* **Sample Call:**
+
+  ```javascript
+    $.ajax({
+      url: "/game/createMultiple",
+      data : "[{"name":"sampleName", "publisher":"samplePublisher", "rating" : 0, "price":6.3},{"name":"sampleName2", "publisher":"samplePublisher", "rating" : 0, "price":6.3}]"
+      dataType: "json",
+      type : "POST",
+      success : function(r) {
+        console.log(r);
+      }
+    });
+  ```
+  
+**Update Game**
+----
+  Updates an entry in the database.
+
+* **URL**
+
+  /game/update
+
+* **Method:**
+
+  `POST`
+  
+*  **URL Params**
+
+  None
+
+* **Data Params**
+
+   **Required**
+   
+  `dto=[json]`
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** `
+   None
+ 
+* **Error Response:**
+
+  * **Code:** 404 NOT FOUND <br />
+
+* **Sample Call:**
+
+  ```javascript
+    $.ajax({
+      url: "/game/update",
+      data : "{"name":"sampleName", "publisher":"samplePublisher", "rating" : 0, "price":6.3}"
+      dataType: "json",
+      type : "POST",
+      success : function(r) {
+        console.log(r);
+      }
+    });
+  ```
+  
+  **Delete Game**
+----
+  Creates a new entry in the database.
+
+* **URL**
+
+  /game/delete
+
+* **Method:**
+
+  `POST`
+  
+*  **URL Params**
+
+   **Required**
+   
+  `id=[integer]`
+
+* **Data Params**
+
+  None
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** `
+   None
+ 
+* **Error Response:**
+
+  * **Code:** 404 NOT FOUND <br />
+
+* **Sample Call:**
+
+  ```javascript
+    $.ajax({
+      url: "/game/delete?id=1",
+      dataType: "json",
+      type : "POST",
+      success : function(r) {
+        console.log(r);
+      }
+    });
+  ```
+   
+
