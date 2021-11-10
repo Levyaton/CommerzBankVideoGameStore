@@ -499,7 +499,7 @@ Rest API Commands:
     });
   ```
   
-  **Delete Game**
+**Delete Game**
 ----
   Creates a new entry in the database.
 
