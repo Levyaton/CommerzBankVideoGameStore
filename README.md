@@ -33,4 +33,49 @@ Rest API Commands:
 * **Error Response:**
 
   * **Code:** 404 NOT FOUND <br />
-    
+
+**Create Game**
+----
+  Creates a new entry in the database.
+
+* **URL**
+
+  /game/create
+
+* **Method:**
+
+  `POST`
+  
+*  **URL Params**
+
+  None
+
+* **Data Params**
+
+   **Required**
+   
+  `dto=[json]`
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** `
+   None
+ 
+* **Error Response:**
+
+  * **Code:** 404 NOT FOUND <br />
+
+* **Sample Call:**
+
+  ```javascript
+    $.ajax({
+      url: "/users/1",
+      data : "{"name":"testName", "rating" : 0, "price":6.3}"
+      dataType: "json",
+      type : "POST",
+      success : function(r) {
+        console.log(r);
+      }
+    });
+  ```
