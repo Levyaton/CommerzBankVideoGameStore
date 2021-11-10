@@ -27,8 +27,8 @@ Rest API Commands:
 
   * **Code:** 200 <br />
     **Content:** `
-    [{"id":1,"name":"testName","publisher":"testPublisher","rating":0,"price":0.0}, 
-    {"id":2,"name":"testName","publisher":"testPublisher","rating":0,"price":0.0}]`
+    [{"id":1,"name":"testName1","publisher":"testPublisher1","rating":0,"price":0.0}, 
+    {"id":2,"name":"testName2","publisher":"testPublisher2","rating":5,"price":3.2}]`
  
 * **Error Response:**
 
