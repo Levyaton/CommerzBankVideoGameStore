@@ -38,7 +38,7 @@ Rest API Commands:
 
   ```javascript
     $.ajax({
-      url: "/users/1",
+      url: "/game/games",
       dataType: "json",
       type : "GET",
       success : function(r) {
@@ -83,7 +83,7 @@ Rest API Commands:
 
   ```javascript
     $.ajax({
-      url: "/users/1",
+      url: "/game/create",
       data : "{"name":"sampleName", "publisher":"samplePublisher", "rating" : 0, "price":6.3}"
       dataType: "json",
       type : "POST",
