@@ -26,7 +26,9 @@ Rest API Commands:
 * **Success Response:**
 
   * **Code:** 200 <br />
-    **Content:** `[{"id":1,"name":"testName","publisher":"testPublisher","rating":0,"price":0.0},{"id":2,"name":"testName","publisher":"testPublisher","rating":0,"price":0.0}]`
+    **Content:** `
+    [{"id":1,"name":"testName","publisher":"testPublisher","rating":0,"price":0.0}, 
+    {"id":2,"name":"testName","publisher":"testPublisher","rating":0,"price":0.0}]`
  
 * **Error Response:**
 
