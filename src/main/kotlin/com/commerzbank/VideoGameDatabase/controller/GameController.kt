@@ -34,6 +34,10 @@ class GameController {
         service.create(dto)
     }
 
+    @GetMapping("/count")
+    fun count(): Int{
+        return service.listAll().size
+    }
 
 
     @PostMapping("/update")

@@ -6,11 +6,11 @@ import javax.persistence.*
 
 @Entity
 @NamedQueries(
-        NamedQuery(name = "Game.findByPublisher", query = "SELECT Game.publisher FROM Game u WHERE Game.publisher= ?1"),
-        NamedQuery(name = "Game.findByName", query = "SELECT Game.name FROM Game u WHERE Game.name= ?1"),
-        NamedQuery(name = "Game.findByRating", query = "SELECT Game.rating FROM Game u WHERE Game.rating= ?1"),
-        NamedQuery(name = "Game.findByPrice", query = "SELECT Game.price FROM Game u WHERE Game.price= ?1"))
-data class Game(
+        NamedQuery(name = "Game.findByPublisher", query = "SELECT publisher FROM Game u WHERE u.publisher= ?1"),
+        NamedQuery(name = "Game.findByName", query = "SELECT name FROM Game u WHERE u.name= ?1"),
+        NamedQuery(name = "Game.findByRating", query = "SELECT rating FROM Game u WHERE u.rating= ?1"),
+        NamedQuery(name = "Game.findByPrice", query = "SELECT price FROM Game u WHERE u.price= ?1"))
+class Game(
                 var name:String,
                 var publisher: String,
                 var rating:Int,
