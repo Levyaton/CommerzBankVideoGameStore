@@ -17,7 +17,7 @@ Rest API Commands:
   
 *  **URL Params**
 
-  None
+   None
 
 * **Data Params**
 
@@ -26,9 +26,9 @@ Rest API Commands:
 * **Success Response:**
 
   * **Code:** 200 <br />
-    **Content:** `{ id : 12, name : "Michael Bloom" }`
+    **Content:** `[{"id":1,"name":"testName","publisher":"testPublisher","rating":0,"price":0.0},{"id":2,"name":"testName","publisher":"testPublisher","rating":0,"price":0.0}]`
  
 * **Error Response:**
 
   * **Code:** 404 NOT FOUND <br />
-    **Content:** `{ error : "User doesn't exist" }`
+    
