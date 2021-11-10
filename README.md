@@ -3,7 +3,7 @@
 Rest API Commands:
 
 
-**Get a list of all games in Database**
+**List Games**
 ----
   Returns json data about each game in the database.
 
