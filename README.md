@@ -19,7 +19,7 @@ Rest API Commands:
 
    **Required**
    
-  `id=[integer]`
+   `id=[integer]`
 
 * **Data Params**
 
