@@ -22,6 +22,22 @@ class GameController {
         return service.listAll()
     }
 
+    @GetMapping("/paginate")
+    fun paginate(@RequestParam page: Int, @RequestParam count: Int): List<GameDto>{
+        val games = service.listAll()
+        val list = mutableListOf<GameDto>()
+        var index = (page-1)*count
+        for (x in index until page*count){
+            if(x > games.size-1){
+                return list
+            }
+            else{
+                list.add(games[x])
+            }
+        }
+        return list
+    }
+
    @GetMapping("/game")
     fun get(@RequestParam id: Int): Game {
         return service.get(id)
@@ -34,6 +50,11 @@ class GameController {
         service.create(dto)
     }
 
+    @PostMapping("/createMultiple")
+    fun create(@RequestBody dtos: List<GameDto>){
+        for(dto in dtos)
+            service.create(dto)
+    }
     @GetMapping("/count")
     fun count(): Int{
         return service.listAll().size
