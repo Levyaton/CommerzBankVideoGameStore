@@ -32,7 +32,20 @@ Rest API Commands:
  
 * **Error Response:**
 
-  * **Code:** 404 NOT FOUND <br />
+    * **Code:** 404 NOT FOUND <br />
+ 
+ * **Sample Call:**
+
+  ```javascript
+    $.ajax({
+      url: "/users/1",
+      dataType: "json",
+      type : "GET",
+      success : function(r) {
+        console.log(r);
+      }
+    });
+  ```
 
 **Create Game**
 ----
