@@ -71,7 +71,7 @@ Rest API Commands:
   ```javascript
     $.ajax({
       url: "/users/1",
-      data : "{"name":"testName", "rating" : 0, "price":6.3}"
+      data : "{"name":"sampleName", "publisher":"samplePublisher", "rating" : 0, "price":6.3}"
       dataType: "json",
       type : "POST",
       success : function(r) {
