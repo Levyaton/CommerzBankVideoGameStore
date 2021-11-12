@@ -5,7 +5,7 @@ import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 
 @SpringBootApplication
-class VideoGameDatabaseApplication
+open class VideoGameDatabaseApplication
 
 fun main(args: Array<String>) {
 	runApplication<VideoGameDatabaseApplication>(*args)

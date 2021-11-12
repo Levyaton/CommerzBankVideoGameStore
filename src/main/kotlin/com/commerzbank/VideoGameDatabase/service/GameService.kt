@@ -11,7 +11,7 @@ import javax.xml.ws.ServiceMode
 
 
 @Service
-class GameService {
+open class GameService {
     @Autowired
     lateinit var dao: GameDao
 

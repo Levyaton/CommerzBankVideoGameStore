@@ -6,12 +6,12 @@ import com.commerzbank.VideoGameDatabase.service.GameService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 import javax.transaction.Transactional
-import kotlin.time.measureTime
+
 
 
 @RestController
 @RequestMapping("/game")
-class GameController {
+open class GameController {
 
     @Autowired
     lateinit var service: GameService
