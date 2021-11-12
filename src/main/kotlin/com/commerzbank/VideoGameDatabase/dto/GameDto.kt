@@ -14,5 +14,9 @@ data class GameDto(
     constructor(game: Game):
             this(game.id,game.name,game.publisher,game.rating,game.price)
 
+    fun toEntity(): Game{
+        return Game(name,publisher,rating, price)
+    }
+
 }
 

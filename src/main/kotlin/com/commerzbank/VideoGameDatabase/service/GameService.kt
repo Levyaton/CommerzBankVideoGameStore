@@ -19,6 +19,11 @@ open class GameService {
 
 
     @Transactional
+    open fun dropAll(){
+        dao.deleteAll()
+    }
+
+    @Transactional
     open fun get(id: Int): GameDto{
         return try{
             GameDto(dao.getOne(id))
@@ -38,8 +43,7 @@ open class GameService {
 
     @Transactional
     open fun create(dto: GameDto){
-        val game = Game(dto.name,dto.publisher,dto.rating,dto.price)
-        dao.save(game)
+        dao.save(dto.toEntity())
     }
 
 
