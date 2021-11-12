@@ -9,7 +9,7 @@ Rest API Commands:
 
 * **URL**
 
-  /game/game
+  /api/v1/game/:id
 
 * **Method:**
 
@@ -39,7 +39,7 @@ Rest API Commands:
 
   ```javascript
     $.ajax({
-      url: "/game/game?id=1",
+      url: "/api/v1/game/1",
       dataType: "json",
       type : "GET",
       success : function(r) {
@@ -54,7 +54,7 @@ Rest API Commands:
 
 * **URL**
 
-  /game/count
+  /api/v1/games/count
 
 * **Method:**
 
@@ -81,7 +81,7 @@ Rest API Commands:
 
   ```javascript
     $.ajax({
-      url: "/game/count",
+      url: "/api/v1/games/count",
       dataType: "json",
       type : "GET",
       success : function(r) {
@@ -97,7 +97,7 @@ Rest API Commands:
 
 * **URL**
 
-  /game/games
+  /api/v1/games
 
 * **Method:**
 
@@ -126,7 +126,7 @@ Rest API Commands:
 
   ```javascript
     $.ajax({
-      url: "/game/games",
+      url: "/api/v1/games",
       dataType: "json",
       type : "GET",
       success : function(r) {
@@ -141,7 +141,7 @@ Rest API Commands:
 
 * **URL**
 
-  /game/paginate
+  /api/v1/games?page=:page&count=:count
 
 * **Method:**
 
@@ -171,7 +171,7 @@ Rest API Commands:
 
   ```javascript
     $.ajax({
-      url: "/game/paginate?page=1&count=2",
+      url: "/api/v1/games?page=1&count=2",
       dataType: "json",
       type : "GET",
       success : function(r) {
@@ -185,7 +185,7 @@ Rest API Commands:
 
 * **URL**
 
-  /game/gamesWithName
+  /api/v1/games?name=:name
 
 * **Method:**
 
@@ -216,7 +216,7 @@ Rest API Commands:
 
   ```javascript
     $.ajax({
-      url: "/game/gamesWithName?name=sample",
+      url: "/api/v1/games?name=sample",
       dataType: "json",
       type : "GET",
       success : function(r) {
@@ -230,7 +230,7 @@ Rest API Commands:
 
 * **URL**
 
-  /game/gamesWithPublisher
+  /api/v1/games?publisher=:publisher
 
 * **Method:**
 
@@ -261,7 +261,7 @@ Rest API Commands:
 
   ```javascript
     $.ajax({
-      url: "/game/gamesWithPublisher?publisher=testPublisher1",
+      url: "/api/v1/games?publisher=testPublisher1",
       dataType: "json",
       type : "GET",
       success : function(r) {
@@ -276,7 +276,7 @@ Rest API Commands:
 
 * **URL**
 
-  /game/gamesWithRating
+  /api/v1/games?rating=:rating
 
 * **Method:**
 
@@ -307,7 +307,7 @@ Rest API Commands:
 
   ```javascript
     $.ajax({
-      url: "/game/gamesWithRating?rating=5",
+      url: "/api/v1/games?rating=5",
       dataType: "json",
       type : "GET",
       success : function(r) {
@@ -321,7 +321,7 @@ Rest API Commands:
 
 * **URL**
 
-  /game/gamesWithPrice
+  /api/v1/games?price=:price
 
 * **Method:**
 
@@ -352,7 +352,7 @@ Rest API Commands:
 
   ```javascript
     $.ajax({
-      url: "/game/gamesWithPrice?price=3.2",
+      url: "/api/v1/games?price=3.2",
       dataType: "json",
       type : "GET",
       success : function(r) {
@@ -367,7 +367,7 @@ Rest API Commands:
 
 * **URL**
 
-  /game/create
+  /api/v1/game
 
 * **Method:**
 
@@ -397,8 +397,8 @@ Rest API Commands:
 
   ```javascript
     $.ajax({
-      url: "/game/create",
-      data : "{"name":"sampleName", "publisher":"samplePublisher", "rating" : 0, "price":6.3}"
+      url: "/api/v1/game",
+      data : "{"name":"sampleName", "publisher":"samplePublisher", "rating" : 0, "price":6.3}",
       dataType: "json",
       type : "POST",
       success : function(r) {
@@ -413,7 +413,7 @@ Rest API Commands:
 
 * **URL**
 
-  /game/createMultiple
+  /api/v1/games
 
 * **Method:**
 
@@ -443,7 +443,7 @@ Rest API Commands:
 
   ```javascript
     $.ajax({
-      url: "/game/createMultiple",
+      url: "/api/v1/games",
       data : "[{"name":"sampleName", "publisher":"samplePublisher", "rating" : 0, "price":6.3},{"name":"sampleName2", "publisher":"samplePublisher", "rating" : 0, "price":6.3}]"
       dataType: "json",
       type : "POST",
@@ -459,11 +459,11 @@ Rest API Commands:
 
 * **URL**
 
-  /game/update
+  /api/v1/game
 
 * **Method:**
 
-  `POST`
+  `PUT`
   
 *  **URL Params**
 
@@ -489,7 +489,7 @@ Rest API Commands:
 
   ```javascript
     $.ajax({
-      url: "/game/update",
+      url: "/api/v1/game",
       data : "{"name":"sampleName", "publisher":"samplePublisher", "rating" : 0, "price":6.3}"
       dataType: "json",
       type : "POST",
@@ -505,11 +505,11 @@ Rest API Commands:
 
 * **URL**
 
-  /game/delete
+  /api/v1/game/:id
 
 * **Method:**
 
-  `POST`
+  `DELETE`
   
 *  **URL Params**
 
@@ -535,7 +535,7 @@ Rest API Commands:
 
   ```javascript
     $.ajax({
-      url: "/game/delete?id=1",
+      url: "/api/v1/game/1",
       dataType: "json",
       type : "POST",
       success : function(r) {
