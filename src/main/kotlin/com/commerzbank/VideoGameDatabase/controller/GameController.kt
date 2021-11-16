@@ -43,7 +43,7 @@ open class GameController {
    @GetMapping("/game/{id}")
    open fun get(@PathVariable id: Int): ResponseEntity<GameDto> {
        val result = service.get(id) ?: return ResponseEntity<GameDto>(HttpStatus.NOT_FOUND)
-       return ResponseEntity<GameDto>(service.get(id),HttpStatus.OK)
+       return ResponseEntity<GameDto>(result,HttpStatus.OK)
 
 
     }
@@ -65,7 +65,7 @@ open class GameController {
     }
 
     @PostMapping("/games")
-    open fun create(@RequestBody dtos: List<GameDto>){
+    open fun createMultiple(@RequestBody dtos: List<GameDto>){
         for(dto in dtos)
             service.create(dto)
     }

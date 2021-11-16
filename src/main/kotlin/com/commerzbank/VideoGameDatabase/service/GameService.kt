@@ -67,9 +67,9 @@ open class GameService {
         val id = dto.id!!
         return if (dao.existsById(id)){
             val game = dao.getOne(id)
-            game.name = dto.name
+            game.name = dto.name.replace(("[^\\d.]").toRegex(), "")
             game.price = dto.price
-            game.publisher = dto.publisher
+            game.publisher = dto.publisher.replace(("[^\\d.]").toRegex(), "")
             game.rating = dto.rating
             dao.save(game)
             dto
@@ -92,12 +92,7 @@ open class GameService {
 
     @Transactional
     open fun findByName(name: String): List<GameDto>{
-        val named = dao.findByName(name)
-        val list = mutableListOf<GameDto>()
-        for(enity in named){
-            list.add(GameDto(enity))
-        }
-        return dao.findByName(name).map { GameDto(it) }
+        return dao.findByName(name.replace(("[^\\d.]").toRegex(), "")).map { GameDto(it) }
     }
 
     @Transactional
@@ -110,7 +105,7 @@ open class GameService {
     }
     @Transactional
     open fun findByPublisher(publisher: String): List<GameDto>{
-        return dao.findByPublisher(publisher).map { GameDto(it) }
+        return dao.findByPublisher(publisher.replace(("[^\\d.]").toRegex(), "")).map { GameDto(it) }
     }
 
     @Transactional
