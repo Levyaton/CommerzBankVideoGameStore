@@ -1,142 +1,219 @@
 package com.commerzbank.VideoGameDatabase
 
-import com.commerzbank.VideoGameDatabase.dao.GameDao
+import com.commerzbank.VideoGameDatabase.controller.GameController
 import com.commerzbank.VideoGameDatabase.dto.GameDto
 import com.commerzbank.VideoGameDatabase.logger.Log
+import com.commerzbank.VideoGameDatabase.httpResponse.ResponseBody
 import com.commerzbank.VideoGameDatabase.service.GameService
 import com.google.gson.Gson
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertTrue
 import org.junit.Test
-import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.extension.ExtendWith
 
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.boot.web.server.LocalServerPort
 import org.springframework.boot.test.web.client.TestRestTemplate
-import org.springframework.http.HttpHeaders
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import org.springframework.http.HttpMethod
 
-import org.springframework.http.ResponseEntity
-
-import org.springframework.http.HttpEntity
-import org.springframework.test.annotation.DirtiesContext
-import javax.persistence.EntityNotFoundException
+import org.springframework.test.context.junit.jupiter.SpringExtension
 import javax.transaction.Transactional
-import kotlin.test.assertFails
-import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
+import org.springframework.boot.test.mock.mockito.MockBean
+
+import com.fasterxml.jackson.databind.ObjectMapper
+import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers.anyInt
+import org.mockito.Mockito
+import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.stubbing.OngoingStubbing
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
+import org.springframework.http.*
+import org.springframework.http.RequestEntity.get
+import org.springframework.http.RequestEntity.post
 
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+
+
+
+@WebMvcTest(GameController::class)
 @RunWith(SpringRunner::class)
+//@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+
+@AutoConfigureMockMvc
 open class GameControllerTests {
 
-    val testGameName = "testName"
-    val testGamePublisher = "testPublisher"
-    val testGameRating = 5
-    val testGamePrice = 0.1
-
-
-    @LocalServerPort
-    var port = 8080
-
-    private val gson = Gson()
-    private var restTemplate = TestRestTemplate()
-
-    private var headers = HttpHeaders()
+    val url = "/api/v1"
+    val gson = Gson()
 
     @Autowired
-    lateinit var gameService: GameService
+    private lateinit var mockMvc: MockMvc
 
 
+    @MockBean
+    lateinit var  gameService: GameService
 
-    private fun createSampleData(count:Int, dto: GameDto){
-
-    }
-
-    private fun createURLWithPort(uri: String): String {
-        return "http://localhost:$port/api/v1$uri"
-    }
-
-    @Transactional
-    open fun prepareDB(gameNumber:Int, name: String, publisher: String, rating: Int, price:Double){
-        //gameService.dropAll()
-        Log.log.info(gameService.listAll().size.toString())
-        val dto = GameDto(id = null, name = name, publisher = publisher, rating = rating, price = price)
-        for(x in 0 until gameNumber){
-            gameService.create(dto)
-        }
-    }
+    private val mockDto = GameDto(1,"testName","testPublisher",1,1.0)
 
 
-    private fun makeRequest(url:String,method:HttpMethod): ResponseEntity<String>{
-        val entity = HttpEntity<String?>(null, headers)
-        return restTemplate.exchange(
-            createURLWithPort(url), method, entity, String::class.java
-        )
-    }
+    private fun <T> whenever(methodCall: T): OngoingStubbing<T> =
+        Mockito.`when`(methodCall)
 
-   @Test
-    @Throws(Exception::class)
-    fun testListAll() {
-        val gameNumber = 4
-        prepareDB(gameNumber,testGameName,testGamePublisher,testGameRating,testGamePrice)
-        val response = makeRequest("/games",HttpMethod.GET)
-        val games = gson.fromJson(response.body, Array<GameDto>::class.java)
-        assertTrue(games.size==gameNumber)
-    }
-
-    @Test
-    @Throws(Exception::class)
-    fun testPaginate(){
-        val gameNumber = 50
-        val pageNumber = 3
-        val itemsPerPage = 3
-        prepareDB(gameNumber,testGameName,testGamePublisher,testGameRating,testGamePrice)
-        val response = makeRequest("/games?page=$pageNumber&count=$itemsPerPage",HttpMethod.GET)
-        val games = gson.fromJson(response.body, Array<GameDto>::class.java)
-        for(x in 0 until itemsPerPage){
-            val expectedId = (pageNumber-1)*itemsPerPage+x+1
-            val current = games[x]
-            assertEquals(expectedId,current.id)
-        }
-    }
 
 
     @Test
-    @Throws(Exception::class)
-    fun testGet(){
-        val gameNumber = 5
-        for(x in 1 until gameNumber){
-            prepareDB(gameNumber = 1,testGameName+x.toString(),testGamePublisher+x.toString(),testGameRating+x,testGamePrice+x)
-        }
-        val response = makeRequest("/game/1",HttpMethod.GET)
-        val game = gson.fromJson(response.body, GameDto::class.java)
-        assertEquals(testGameName+"1", game.name)
-        assertEquals(testGamePublisher+"1", game.publisher)
-        assertEquals(testGamePrice+1, game.price)
-        assertEquals(testGameRating+1, game.rating)
-        assertEquals(1,game.id)
+    open fun create_WhenValidInput_ThenReturns200(){
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.post("$url/game")
+            .content(gson.toJson(mockDto))
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON)).andExpect(status().is2xxSuccessful)
     }
 
     @Test
-    @Throws(Exception::class)
-    fun testDelete(){
-        val gameNumber = 5
-        for(x in 1 until gameNumber){
-            prepareDB(gameNumber = 1,testGameName+x.toString(),testGamePublisher+x.toString(),testGameRating+x,testGamePrice+x)
-        }
-        assertEquals(gameNumber-1,gameService.listAll().size)
-        val response = makeRequest("/game/1",HttpMethod.DELETE)
-        assertEquals(gameNumber-2,gameService.listAll().size)
-        assertFailsWith<EntityNotFoundException>{
-            gameService.get(0)
-        }
+    open fun create_WhenInvalidInput_ThenReturns400(){
+        mockMvc.perform(
+            MockMvcRequestBuilders.post("$url/game")
+                .content("Bad Input")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest)
+    }
+
+    @Test
+    open fun get_WhenValidInput_ThenReturns200(){
+        whenever(gameService.get(anyInt())).thenReturn(mockDto)
+        mockMvc.perform(MockMvcRequestBuilders.get("$url/game/1")).andExpect(jsonPath("name").value("testName"))
+            .andExpect(jsonPath("id").value(1))
+            .andExpect(jsonPath("publisher").value("testPublisher"))
+            .andExpect(jsonPath("rating").value(1))
+            .andExpect(jsonPath("price").value(1.0))
+            .andExpect(status().is2xxSuccessful)
+    }
+
+    @Test
+    open fun get_WhenInvalidInput_ThenReturns400(){
+        whenever(gameService.get(anyInt())).thenReturn(mockDto)
+        mockMvc.perform(MockMvcRequestBuilders.get("$url/game/mockBadRequest"))
+            .andExpect(status().isBadRequest)
+    }
+
+    @Test
+    open fun get_WhenUnknownId_ThenReturns404(){
+        whenever(gameService.get(anyInt())).thenReturn(null)
+        mockMvc.perform(MockMvcRequestBuilders.get("$url/game/1"))
+            .andExpect(status().isNotFound)
+    }
+
+    @Test
+    open fun delete_WhenValidInput_ThenReturns200(){
+        whenever(gameService.delete(anyInt())).thenReturn(mockDto)
+        mockMvc.perform(MockMvcRequestBuilders.delete("$url/game/1"))
+            .andExpect(status().isOk)
+    }
+
+    @Test
+    open fun delete_WhenInvalidInput_ThenReturns400(){
+        whenever(gameService.delete(anyInt())).thenReturn(mockDto)
+        mockMvc.perform(MockMvcRequestBuilders.delete("$url/game/mockBadRequest"))
+            .andExpect(status().isBadRequest)
+    }
+
+    @Test
+    open fun delete_WhenUnknownId_ThenReturns404(){
+        whenever(gameService.delete(anyInt())).thenReturn(null)
+        mockMvc.perform(MockMvcRequestBuilders.delete("$url/game/1"))
+            .andExpect(status().isNotFound)
+    }
+
+
+    @Test
+    open fun count_WhenCalled_ThenReturns200(){
+        whenever(gameService.count()).thenReturn(10)
+        mockMvc.perform(MockMvcRequestBuilders.get("$url/games/count"))
+            .andExpect(status().isOk)
 
     }
+
+    @Test
+    open fun update_WhenValidInput_ThenReturns200(){
+        whenever(gameService.update(mockDto)).thenReturn(mockDto)
+        mockMvc.perform(MockMvcRequestBuilders.put("$url/game").content(
+            gson.toJson(mockDto))
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk)
+
+    }
+
+    @Test
+    open fun update_WhenInvalidInput_ThenReturns400(){
+        whenever(gameService.update(mockDto)).thenReturn(mockDto)
+        mockMvc.perform(MockMvcRequestBuilders.put("$url/game").content(
+            "Bad Input")
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isBadRequest)
+
+    }
+
+    @Test
+    open fun update_WhenUnknownId_ThenReturns404(){
+        whenever(gameService.update(mockDto)).thenReturn(null)
+        mockMvc.perform(MockMvcRequestBuilders.put("$url/game").content(
+            gson.toJson(mockDto))
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound)
+
+    }
+
+    @Test
+    open fun listAll_WhenCalled_ThenReturns200(){
+
+        whenever(gameService.listAll()).thenReturn(listOf(mockDto,mockDto,mockDto,mockDto))
+        mockMvc.perform(MockMvcRequestBuilders.get("$url/games").content(
+            gson.toJson(mockDto)))
+            .andExpect(status().isOk)
+
+    }
+
+    @Test
+    open fun paginate_WhenValidInput_ThenReturns200(){
+
+        whenever(gameService.paginate(anyInt(), anyInt())).thenReturn(listOf(mockDto,mockDto))
+        mockMvc.perform(MockMvcRequestBuilders.get("$url/games?page=1&count=2").content(
+            gson.toJson(mockDto)))
+            .andExpect(status().isOk)
+
+    }
+
+    @Test
+    open fun paginate_WhenInvalidInput_ThenReturns400(){
+
+        whenever(gameService.paginate(anyInt(), anyInt())).thenReturn(listOf(mockDto,mockDto))
+
+        mockMvc.perform(MockMvcRequestBuilders.get("$url/games?page=Bad&count=2").content(
+            gson.toJson(mockDto)))
+            .andExpect(status().isBadRequest)
+        mockMvc.perform(MockMvcRequestBuilders.get("$url/games?page=1&count=Input").content(
+            gson.toJson(mockDto)))
+            .andExpect(status().isBadRequest)
+        mockMvc.perform(MockMvcRequestBuilders.get("$url/games?page=Bad&count=Input").content(
+            gson.toJson(mockDto)))
+            .andExpect(status().isBadRequest)
+
+    }
+
+
+
+
 }

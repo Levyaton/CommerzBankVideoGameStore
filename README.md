@@ -501,7 +501,7 @@ Rest API Commands:
   
 **Delete Game**
 ----
-  Creates a new entry in the database.
+  Deletes an entry in the database.
 
 * **URL**
 
@@ -543,5 +543,49 @@ Rest API Commands:
       }
     });
   ```
-   
+
+**Delete All Games**
+----
+Drops all entries in the database.
+
+* **URL**
+
+  /api/v1/game/:id
+
+* **Method:**
+
+  `DELETE`
+
+*  **URL Params**
+
+   **Required**
+
+`id=[integer]`
+
+* **Data Params**
+
+  None
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** `
+    None
+
+* **Error Response:**
+
+  * **Code:** 404 NOT FOUND <br />
+
+* **Sample Call:**
+
+  ```javascript
+    $.ajax({
+      url: "/api/v1/game/1",
+      dataType: "json",
+      type : "POST",
+      success : function(r) {
+        console.log(r);
+      }
+    });
+  ```
 

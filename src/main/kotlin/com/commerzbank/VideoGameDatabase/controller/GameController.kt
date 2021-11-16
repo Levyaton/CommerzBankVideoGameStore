@@ -7,9 +7,17 @@ import com.commerzbank.VideoGameDatabase.service.GameService
 import org.slf4j.LoggerFactory
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.dao.EmptyResultDataAccessException
+import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.server.ResponseStatusException
 import java.util.logging.Logger.getLogger
+import javax.persistence.EntityNotFoundException
 import javax.transaction.Transactional
+import org.springframework.http.ResponseEntity
+
+
+
 
 
 
@@ -29,30 +37,24 @@ open class GameController {
 
     @RequestMapping(value = ["/games"], params = ["page","count"])
     open fun paginate(@RequestParam page: Int, @RequestParam count: Int): List<GameDto>{
-        val games = service.listAll()
-        val list = mutableListOf<GameDto>()
-        var index = (page-1)*count
-        for (x in index until page*count){
-            if(x > games.size-1){
-                return list
-            }
-            else{
-                list.add(games[x])
-            }
-        }
-        Log.log.info(list.size.toString())
-        return list
+        return service.paginate(page,count)
     }
 
    @GetMapping("/game/{id}")
-   open fun get(@PathVariable id: Int): GameDto {
-        return service.get(id)
+   open fun get(@PathVariable id: Int): ResponseEntity<GameDto> {
+       val result = service.get(id) ?: return ResponseEntity<GameDto>(HttpStatus.NOT_FOUND)
+       return ResponseEntity<GameDto>(service.get(id),HttpStatus.OK)
+
+
     }
 
     @DeleteMapping("/game/{id}")
-    open fun delete(@PathVariable id: Int){
-        service.delete(id)
-        Log.log.info("deleted id " + id.toString())
+    open fun delete(@PathVariable id: Int): ResponseEntity<String> {
+        if(service.delete(id)==null)
+            return ResponseEntity<String>(HttpStatus.NOT_FOUND)
+            Log.log.info("deleted id " + id.toString())
+        return ResponseEntity<String>("Deleted game with id ${id}",HttpStatus.OK)
+
     }
 
 
@@ -68,17 +70,22 @@ open class GameController {
             service.create(dto)
     }
     @GetMapping("/games/count")
-    open fun count(): Int{
-        return service.listAll().size
+    open fun count(): Long{
+        return service.count()
     }
 
 
     @PutMapping("/game")
-    open fun update(@RequestBody dto: GameDto){
-        service.update(dto)
+    open fun update(@RequestBody dto: GameDto): ResponseEntity<String> {
+        if( service.update(dto)==null)
+            return ResponseEntity<String>(HttpStatus.NOT_FOUND)
+        return ResponseEntity<String>("updated game with id ${dto.id}",HttpStatus.OK)
     }
 
-
+    @DeleteMapping("/games")
+    open fun deleteAll(){
+        service.dropAll()
+    }
 
 
     @RequestMapping(value = ["/games"], params = ["name"])
