@@ -58,7 +58,8 @@ open class GameService {
 
     @Transactional
     open fun create(dto: GameDto){
-        dao.save(dto.toEntity())
+        val entity = dto.toEntity()
+        dao.save(entity)
     }
 
 
