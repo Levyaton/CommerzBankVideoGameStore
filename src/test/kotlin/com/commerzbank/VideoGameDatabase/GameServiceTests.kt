@@ -43,7 +43,6 @@ open class GameServiceTests {
     private val sampleDto = GameDto(1,"testName","testPublisher",1,0.3)
     //private val sampleDto2 = GameDto(2,"testName2","testPublisher2",2,0.6)
 
-    private val sampleDtoList = mutableListOf(sampleDto)//,sampleDto2)
 
     @MockBean
     private lateinit var gameDao: GameDao
