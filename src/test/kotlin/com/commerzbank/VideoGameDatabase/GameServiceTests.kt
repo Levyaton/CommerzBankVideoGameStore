@@ -11,8 +11,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchers.anyInt
+import org.mockito.ArgumentMatchers.*
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
@@ -217,34 +216,18 @@ open class GameServiceTests {
         assertEquals(2,sublist.size)
     }
 
-    @Test
-    open fun create_WhenAny_ThenAddItemToDatabase() {
-        val games = mutableListOf<GameDto>()
-        whenever(gameDao.save(any<Game>())).then {
-           games.add(sampleDto)
-        }
-        whenever(gameDao.getOne(anyInt())).thenReturn(sampleDto.toEntity())
-        whenever(gameDao.existsById(anyInt())).thenReturn(true)
-        val result = gameService.create(sampleDto)
-        assertEquals(1,games.size)
-        assertNotNull(result)
-    }
 
     @Test
     open fun update_WhenIdExists_ThenReturnsSampleDto() {
+        val dto = sampleDto
         val games = mutableListOf(sampleDto)
         val newName  = "test"
-        whenever(gameDao.save(any())).then {
-            games.removeAt(0)
-            val a = sampleDto.copy()
-            a.name = newName
-            games.add(a)
-        }
+        dto.name = newName
         whenever(gameDao.getOne(anyInt())).thenReturn(sampleDto.toEntity())
         whenever(gameDao.existsById(anyInt())).thenReturn(true)
-        val result = gameService.update(sampleDto)
-        assertEquals(newName,games[0].name)
+        val result = gameService.update(dto)
         assertNotNull(result)
+        assertEquals(newName,result.name)
     }
 
     @Test
@@ -289,5 +272,60 @@ open class GameServiceTests {
         assertNull(result)
     }
 
+    @Test
+    open fun findByName_WhenNameExists_ThenReturnsListOfMatchingNamesDtos() {
+        whenever(gameDao.findByName(anyString())).thenReturn(listOf(sampleDto.toEntity(),sampleDto.toEntity(),sampleDto.toEntity()))
+        val sublist = gameService.findByName("testName")
+        assertEquals(3,sublist.size)
+    }
+
+    @Test
+    open fun findByName_WhenNameDoesNotExists_ThenReturnsEmptyList() {
+        whenever(gameDao.findByName(anyString())).thenReturn(listOf())
+        val sublist = gameService.findByName("testName")
+        assertEquals(0,sublist.size)
+    }
+
+    @Test
+    open fun findByPublisher_WhenPublisherExists_ThenReturnsListOfMatchingPublisherDtos() {
+        whenever(gameDao.findByPublisher(anyString())).thenReturn(listOf(sampleDto.toEntity(),sampleDto.toEntity(),sampleDto.toEntity()))
+        val sublist = gameService.findByPublisher("testName")
+        assertEquals(3,sublist.size)
+    }
+
+    @Test
+    open fun findByPublisher_WhenPublisherDoesNotExists_ThenReturnsEmptyList() {
+        whenever(gameDao.findByPublisher(anyString())).thenReturn(listOf())
+        val sublist = gameService.findByPublisher("testName")
+        assertEquals(0,sublist.size)
+    }
+
+    @Test
+    open fun findByPrice_WhenPriceExists_ThenReturnsListOfMatchingPriceDtos() {
+        whenever(gameDao.findByPrice(anyDouble())).thenReturn(listOf(sampleDto.toEntity(),sampleDto.toEntity(),sampleDto.toEntity()))
+        val sublist = gameService.findByPrice(0.1)
+        assertEquals(3,sublist.size)
+    }
+
+    @Test
+    open fun findByPrice_WhenPriceDoesNotExists_ThenReturnsEmptyList() {
+        whenever(gameDao.findByPrice(anyDouble())).thenReturn(listOf())
+        val sublist = gameService.findByPrice(0.1)
+        assertEquals(0,sublist.size)
+    }
+
+    @Test
+    open fun findByRating_WhenRatingExists_ThenReturnsListOfMatchingRatingDtos() {
+        whenever(gameDao.findByRating(anyInt())).thenReturn(listOf(sampleDto.toEntity(),sampleDto.toEntity(),sampleDto.toEntity()))
+        val sublist = gameService.findByRating(1)
+        assertEquals(3,sublist.size)
+    }
+
+    @Test
+    open fun findByRating_WhenRatingDoesNotExists_ThenReturnsEmptyList() {
+        whenever(gameDao.findByRating(anyInt())).thenReturn(listOf())
+        val sublist = gameService.findByRating(1)
+        assertEquals(0,sublist.size)
+    }
 
 }
