@@ -5,15 +5,14 @@ import javax.persistence.*
 
 
 @Entity
-@NamedQueries(
-        NamedQuery(name = "Game.findByPublisher", query = "SELECT g FROM Game g WHERE g.publisher= ?1"),
-        NamedQuery(name = "Game.findByName", query = "SELECT g FROM Game g WHERE g.name= ?1"),
-        NamedQuery(name = "Game.findByRating", query = "SELECT g FROM Game g WHERE g.rating= ?1"),
-        NamedQuery(name = "Game.findByPrice", query = "SELECT g FROM Game g WHERE g.price= ?1"))
 class Game(
+    @Column(name="name", nullable=false)
                 var name:String,
+    @Column(name="publisher", nullable=false)
                 var publisher: String,
+    @Column(name="rating", nullable=false)
                 var rating:Int,
+    @Column(name="price", nullable=false)
                 var price:Double
 ) {
     constructor():
