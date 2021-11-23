@@ -6,10 +6,12 @@ import com.commerzbank.VideoGameDatabase.dao.GameDao
 import com.commerzbank.VideoGameDatabase.dto.GameDto
 import com.commerzbank.VideoGameDatabase.model.Game
 import com.commerzbank.VideoGameDatabase.service.GameService
-import org.junit.Test
+import org.aspectj.lang.annotation.Before
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
-import org.junit.runner.RunWith
+
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.*
 import org.mockito.InjectMocks
@@ -20,7 +22,9 @@ import org.mockito.Mockito.doAnswer
 import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
@@ -31,9 +35,9 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
 @ExtendWith(SpringExtension::class)
-@WebMvcTest(GameService::class)
-@RunWith(SpringRunner::class)
-open class GameServiceTests {
+@ContextConfiguration(classes = [GameDao::class])
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+class GameServiceTests {
 
 
     private lateinit var gameService: GameService
@@ -43,7 +47,7 @@ open class GameServiceTests {
     //private val sampleDto2 = GameDto(2,"testName2","testPublisher2",2,0.6)
 
 
-    @MockBean
+    @Mock
     private lateinit var gameDao: GameDao
 
 
@@ -53,7 +57,7 @@ open class GameServiceTests {
     }
 
     @Test
-    open fun dropAll_WhenAny_ThenEmptiesDatabase() {
+    fun dropAll_WhenAny_ThenEmptiesDatabase() {
         var gameNumber = 10
 
         whenever(gameDao.deleteAll()).then{
@@ -68,28 +72,28 @@ open class GameServiceTests {
     }
 
     @Test
-    open fun get_WhenKnownId_ThenReturnsSampleDto() {
+    fun get_WhenKnownId_ThenReturnsSampleDto() {
         whenever(gameDao.getOne(anyInt())).thenReturn(sampleDto.toEntity())
         whenever(gameDao.existsById(anyInt())).thenReturn(true)
         assertNotNull(gameService.get(1))
     }
 
     @Test
-    open fun get_WhenUnknownId_ThenReturnsNull() {
+    fun get_WhenUnknownId_ThenReturnsNull() {
         whenever(gameDao.getOne(anyInt())).thenReturn(sampleDto.toEntity())
         whenever(gameDao.existsById(anyInt())).thenReturn(false)
         assertNull(gameService.get(1))
     }
 
     @Test
-    open fun listAll_WhenAny_ThenReturnsListOfSampleDto() {
+    fun listAll_WhenAny_ThenReturnsListOfSampleDto() {
         val list = listOf(sampleDto.toEntity(),sampleDto.toEntity(), sampleDto.toEntity())
         whenever(gameDao.findAll()).thenReturn(list)
         assertEquals(3,gameService.listAll().size)
     }
 
     @Test
-    open fun paginate_WhenExistingPageAndCount_ThenReturnsCorrectListOfSampleDto() {
+    fun paginate_WhenExistingPageAndCount_ThenReturnsCorrectListOfSampleDto() {
         val entity1 = sampleDto.toEntity()
         entity1.name = sampleDto.name + 1
         val entity2 = sampleDto.toEntity()
@@ -113,7 +117,7 @@ open class GameServiceTests {
     }
 
     @Test
-    open fun paginate_WhenNonexistingPageAndCount_ThenReturnsEmptyList() {
+    fun paginate_WhenNonexistingPageAndCount_ThenReturnsEmptyList() {
         val entity1 = sampleDto.toEntity()
         entity1.name = sampleDto.name + 1
         val entity2 = sampleDto.toEntity()
@@ -135,7 +139,7 @@ open class GameServiceTests {
     }
 
     @Test
-    open fun paginate_WhenNonexistingPageAndExistingCount_ThenReturnsEmptyList() {
+    fun paginate_WhenNonexistingPageAndExistingCount_ThenReturnsEmptyList() {
         val entity1 = sampleDto.toEntity()
         entity1.name = sampleDto.name + 1
         val entity2 = sampleDto.toEntity()
@@ -157,7 +161,7 @@ open class GameServiceTests {
     }
 
     @Test
-    open fun paginate_WhenPageIs1AndNonexistingCount_ThenReturnsListofRemainingSampleDtos() {
+    fun paginate_WhenPageIs1AndNonexistingCount_ThenReturnsListofRemainingSampleDtos() {
         val entity1 = sampleDto.toEntity()
         entity1.name = sampleDto.name + 1
         val entity2 = sampleDto.toEntity()
@@ -172,14 +176,14 @@ open class GameServiceTests {
         entity6.name = sampleDto.name + 6
 
         val list = listOf(entity1,entity2,entity3,entity4,entity5,entity6)
-        whenever(gameDao.findAll()).thenReturn(list)
+        whenever(gameDao.listAll(any())).thenReturn(list)
 
         val sublist = gameService.listAll(page = 1, size = 200)
         assertEquals(6,sublist.size)
     }
 
     @Test
-    open fun paginate_WhenExistingNon1PageAndNonExistingCount_ThenReturnsEmptyList() {
+    fun paginate_WhenExistingNon1PageAndNonExistingCount_ThenReturnsEmptyList() {
         val entity1 = sampleDto.toEntity()
         entity1.name = sampleDto.name + 1
         val entity2 = sampleDto.toEntity()
@@ -201,7 +205,7 @@ open class GameServiceTests {
     }
 
     @Test
-    open fun paginate_WhenPageAndCountExistButTheirCombinationGoesOverrange_ThenReturnsListofRemainingSampleDtos() {
+    fun paginate_WhenPageAndCountExistButTheirCombinationGoesOverrange_ThenReturnsListofRemainingSampleDtos() {
         val entity1 = sampleDto.toEntity()
         entity1.name = sampleDto.name + 1
         val entity2 = sampleDto.toEntity()
@@ -224,7 +228,7 @@ open class GameServiceTests {
 
 
     @Test
-    open fun update_WhenIdExists_ThenReturnsSampleDto() {
+    fun update_WhenIdExists_ThenReturnsSampleDto() {
         val dto = sampleDto
         val games = mutableListOf(sampleDto)
         val newName  = "test"
@@ -237,7 +241,7 @@ open class GameServiceTests {
     }
 
     @Test
-    open fun update_WhenIdDoesNotExist_ThenReturnsNull() {
+    fun update_WhenIdDoesNotExist_ThenReturnsNull() {
         val games = mutableListOf(sampleDto)
         val newName  = "test"
         whenever(gameDao.save(any())).then {
@@ -254,7 +258,7 @@ open class GameServiceTests {
 
 
     @Test
-    open fun delete_WhenIdExists_ThenReturnsSampleDto() {
+    fun delete_WhenIdExists_ThenReturnsSampleDto() {
         val games = mutableListOf(sampleDto,sampleDto,sampleDto)
         whenever(gameDao.deleteById(anyInt())).then {
             games.removeAt(0)
@@ -267,7 +271,7 @@ open class GameServiceTests {
     }
 
     @Test
-    open fun delete_WhenIdDoesNotExist_ThenReturnsNull() {
+    fun delete_WhenIdDoesNotExist_ThenReturnsNull() {
         val games = mutableListOf(sampleDto,sampleDto,sampleDto)
         whenever(gameDao.deleteById(anyInt())).then {
             games.removeAt(0)
@@ -279,56 +283,56 @@ open class GameServiceTests {
     }
 
     @Test
-    open fun findByName_WhenNameExists_ThenReturnsListOfMatchingNamesDtos() {
+    fun findByName_WhenNameExists_ThenReturnsListOfMatchingNamesDtos() {
         whenever(gameDao.findByName(anyString())).thenReturn(listOf(sampleDto.toEntity(),sampleDto.toEntity(),sampleDto.toEntity()))
         val sublist = gameService.findByName("testName")
         assertEquals(3,sublist.size)
     }
 
     @Test
-    open fun findByName_WhenNameDoesNotExists_ThenReturnsEmptyList() {
+    fun findByName_WhenNameDoesNotExists_ThenReturnsEmptyList() {
         whenever(gameDao.findByName(anyString())).thenReturn(listOf())
         val sublist = gameService.findByName("testName")
         assertEquals(0,sublist.size)
     }
 
     @Test
-    open fun findByPublisher_WhenPublisherExists_ThenReturnsListOfMatchingPublisherDtos() {
+    fun findByPublisher_WhenPublisherExists_ThenReturnsListOfMatchingPublisherDtos() {
         whenever(gameDao.findByPublisher(anyString())).thenReturn(listOf(sampleDto.toEntity(),sampleDto.toEntity(),sampleDto.toEntity()))
         val sublist = gameService.findByPublisher("testName")
         assertEquals(3,sublist.size)
     }
 
     @Test
-    open fun findByPublisher_WhenPublisherDoesNotExists_ThenReturnsEmptyList() {
+    fun findByPublisher_WhenPublisherDoesNotExists_ThenReturnsEmptyList() {
         whenever(gameDao.findByPublisher(anyString())).thenReturn(listOf())
         val sublist = gameService.findByPublisher("testName")
         assertEquals(0,sublist.size)
     }
 
     @Test
-    open fun findByPrice_WhenPriceExists_ThenReturnsListOfMatchingPriceDtos() {
+    fun findByPrice_WhenPriceExists_ThenReturnsListOfMatchingPriceDtos() {
         whenever(gameDao.findByPrice(anyDouble())).thenReturn(listOf(sampleDto.toEntity(),sampleDto.toEntity(),sampleDto.toEntity()))
         val sublist = gameService.findByPrice(0.1)
         assertEquals(3,sublist.size)
     }
 
     @Test
-    open fun findByPrice_WhenPriceDoesNotExists_ThenReturnsEmptyList() {
+    fun findByPrice_WhenPriceDoesNotExists_ThenReturnsEmptyList() {
         whenever(gameDao.findByPrice(anyDouble())).thenReturn(listOf())
         val sublist = gameService.findByPrice(0.1)
         assertEquals(0,sublist.size)
     }
 
     @Test
-    open fun findByRating_WhenRatingExists_ThenReturnsListOfMatchingRatingDtos() {
+    fun findByRating_WhenRatingExists_ThenReturnsListOfMatchingRatingDtos() {
         whenever(gameDao.findByRating(anyInt())).thenReturn(listOf(sampleDto.toEntity(),sampleDto.toEntity(),sampleDto.toEntity()))
         val sublist = gameService.findByRating(1)
         assertEquals(3,sublist.size)
     }
 
     @Test
-    open fun findByRating_WhenRatingDoesNotExists_ThenReturnsEmptyList() {
+    fun findByRating_WhenRatingDoesNotExists_ThenReturnsEmptyList() {
         whenever(gameDao.findByRating(anyInt())).thenReturn(listOf())
         val sublist = gameService.findByRating(1)
         assertEquals(0,sublist.size)
