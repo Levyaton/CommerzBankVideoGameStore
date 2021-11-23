@@ -26,12 +26,15 @@ import org.springframework.http.ResponseEntity
 @RestController
 @RequestMapping("/api/v1")
 
-class GameController {
+class GameController() {
 
+    @Autowired constructor(
+        service: GameService
+    ) : this() {
+        this.service = service
+    }
 
-    @Autowired
-    lateinit var service: GameService
-
+    private lateinit var service: GameService
 
     @GetMapping("/games")
     fun listAll():List<GameDto>{

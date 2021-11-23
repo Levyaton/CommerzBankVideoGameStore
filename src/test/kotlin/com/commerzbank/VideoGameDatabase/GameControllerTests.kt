@@ -4,7 +4,9 @@ import com.commerzbank.VideoGameDatabase.Helper.Companion.whenever
 import com.commerzbank.VideoGameDatabase.controller.GameController
 import com.commerzbank.VideoGameDatabase.dto.GameDto
 import com.commerzbank.VideoGameDatabase.service.GameService
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.gson.Gson
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -19,7 +21,11 @@ import org.mockito.ArgumentMatchers.*
 import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.http.*
+import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.springframework.test.context.web.WebAppConfiguration
 
 
 import org.springframework.test.web.servlet.MockMvc
@@ -31,15 +37,15 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders
 
 
 
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith(MockitoExtension::class)
-class GameControllerTests {
+@AutoConfigureMockMvc
+class GameControllerTests (@Autowired val mockMvc: MockMvc) {
+
 
     val url = "/api/v1"
     val gson = Gson()
-
-
-    private lateinit var mockMvc: MockMvc
 
 
     @MockBean
@@ -47,9 +53,6 @@ class GameControllerTests {
 
     private val sampleDto = GameDto(1, "testName", "testPublisher", 1, 1.0)
 
-    fun setup(){
-        mockMvc = MockMvcBuilders.standaloneSetup(GameController()).build();
-    }
 
 
 

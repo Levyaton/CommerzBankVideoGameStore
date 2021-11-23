@@ -18,11 +18,15 @@ import kotlin.math.log
 
 
 @Service
-class GameService {
-    @Autowired
-    lateinit var dao: GameDao
+class GameService(){
 
+    @Autowired constructor(
+        dao: GameDao
+    ) : this() {
+        this.dao = dao
+    }
 
+    lateinit var dao:GameDao
     @Transactional
     fun dropAll(){
         dao.deleteAll()

@@ -54,7 +54,7 @@ class GameServiceTests {
 
     @BeforeEach
     fun setup(){
-        gameService = GameService()
+        gameService = GameService(gameDao)
     }
 
     @Test
@@ -65,8 +65,6 @@ class GameServiceTests {
             while(gameNumber!=0)
                 gameNumber--
         }
-        whenever(gameDao.getOne(anyInt())).thenReturn(sampleDto.toEntity())
-        whenever(gameDao.existsById(anyInt())).thenReturn(true)
         val result = gameService.dropAll()
         assertEquals(0,gameNumber)
         assertNotNull(result)
@@ -81,7 +79,6 @@ class GameServiceTests {
 
     @Test
     fun get_WhenUnknownId_ThenReturnsNull() {
-        whenever(gameDao.getOne(anyInt())).thenReturn(sampleDto.toEntity())
         whenever(gameDao.existsById(anyInt())).thenReturn(false)
         assertNull(gameService.get(1))
     }
@@ -108,10 +105,10 @@ class GameServiceTests {
         val entity6 = sampleDto.toEntity()
         entity6.name = sampleDto.name + 6
 
-        val list = listOf(entity1,entity2,entity3,entity4,entity5,entity6)
-        whenever(gameDao.findAll()).thenReturn(list)
+        val list = listOf(entity3,entity4)
+        whenever(gameDao.listAll(PageRequest.of(1, 2))).thenReturn(list)
 
-        val sublist = gameService.listAll(page = 2, size = 2)
+        val sublist = gameService.listAll(page = 1, size = 2)
         assertEquals(2,sublist.size)
         assertEquals("testName3", sublist[0].name)
         assertEquals("testName4", sublist[1].name)
@@ -133,7 +130,6 @@ class GameServiceTests {
         entity6.name = sampleDto.name + 6
 
         val list = listOf(entity1,entity2,entity3,entity4,entity5,entity6)
-        whenever(gameDao.findAll()).thenReturn(list)
 
         val sublist = gameService.listAll(page = 200, size = 200)
         assertEquals(0,sublist.size)
@@ -155,7 +151,7 @@ class GameServiceTests {
         entity6.name = sampleDto.name + 6
 
         val list = listOf(entity1,entity2,entity3,entity4,entity5,entity6)
-        whenever(gameDao.findAll()).thenReturn(list)
+
 
         val sublist = gameService.listAll(page = 200, size = 3)
         assertEquals(0,sublist.size)
@@ -180,13 +176,6 @@ class GameServiceTests {
     fun update_WhenIdDoesNotExist_ThenReturnsNull() {
         val games = mutableListOf(sampleDto)
         val newName  = "test"
-        whenever(gameDao.save(any())).then {
-            games.removeAt(0)
-            val a = sampleDto.copy()
-            a.name = newName
-            games.add(a)
-        }
-        whenever(gameDao.getOne(anyInt())).thenReturn(sampleDto.toEntity())
         whenever(gameDao.existsById(anyInt())).thenReturn(false)
         val result = gameService.update(sampleDto.toUpdateGameDto(),1)
         assertNull(result)
@@ -209,9 +198,6 @@ class GameServiceTests {
     @Test
     fun delete_WhenIdDoesNotExist_ThenReturnsNull() {
         val games = mutableListOf(sampleDto,sampleDto,sampleDto)
-        whenever(gameDao.deleteById(anyInt())).then {
-            games.removeAt(0)
-        }
         whenever(gameDao.existsById(anyInt())).thenReturn(false)
         val result = gameService.delete(1)
         assertEquals(3,games.size)
