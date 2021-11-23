@@ -3,6 +3,7 @@ package com.commerzbank.VideoGameDatabase
 import com.commerzbank.VideoGameDatabase.Helper.Companion.whenever
 import com.commerzbank.VideoGameDatabase.controller.GameController
 import com.commerzbank.VideoGameDatabase.dto.GameDto
+import com.commerzbank.VideoGameDatabase.logger.Log
 import com.commerzbank.VideoGameDatabase.service.GameService
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.gson.Gson
@@ -37,10 +38,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders
 
 
 
-
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ExtendWith(MockitoExtension::class)
-@AutoConfigureMockMvc
+@WebMvcTest
 class GameControllerTests (@Autowired val mockMvc: MockMvc) {
 
 
@@ -60,7 +58,7 @@ class GameControllerTests (@Autowired val mockMvc: MockMvc) {
     fun create_WhenValidInput_ThenReturns200() {
 
         mockMvc.perform(
-            MockMvcRequestBuilders.post("$url/game")
+            MockMvcRequestBuilders.post("$url/games")
                 .content(gson.toJson(sampleDto))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
@@ -71,7 +69,7 @@ class GameControllerTests (@Autowired val mockMvc: MockMvc) {
     fun create_WhenInvalidInput_ThenReturns400() {
 
         mockMvc.perform(
-            MockMvcRequestBuilders.post("$url/game")
+            MockMvcRequestBuilders.post("$url/games")
                 .content("Bad Input")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
@@ -81,7 +79,7 @@ class GameControllerTests (@Autowired val mockMvc: MockMvc) {
     @Test
     fun get_WhenValidInput_ThenReturns200() {
         whenever(gameService.get(anyInt())).thenReturn(sampleDto)
-        mockMvc.perform(MockMvcRequestBuilders.get("$url/game/1")).andExpect(jsonPath("name").value("testName"))
+        mockMvc.perform(MockMvcRequestBuilders.get("$url/games/1")).andExpect(jsonPath("name").value("testName"))
             .andExpect(jsonPath("id").value(1))
             .andExpect(jsonPath("publisher").value("testPublisher"))
             .andExpect(jsonPath("rating").value(1))
@@ -92,35 +90,35 @@ class GameControllerTests (@Autowired val mockMvc: MockMvc) {
     @Test
     fun get_WhenInvalidInput_ThenReturns400() {
         whenever(gameService.get(anyInt())).thenReturn(sampleDto)
-        mockMvc.perform(MockMvcRequestBuilders.get("$url/game/mockBadRequest"))
+        mockMvc.perform(MockMvcRequestBuilders.get("$url/games/mockBadRequest"))
             .andExpect(status().isBadRequest)
     }
 
     @Test
     fun get_WhenUnknownId_ThenReturns404() {
         whenever(gameService.get(anyInt())).thenReturn(null)
-        mockMvc.perform(MockMvcRequestBuilders.get("$url/game/1"))
+        mockMvc.perform(MockMvcRequestBuilders.get("$url/games/1"))
             .andExpect(status().isNotFound)
     }
 
     @Test
     fun delete_WhenValidInput_ThenReturns200() {
         whenever(gameService.delete(anyInt())).thenReturn(sampleDto)
-        mockMvc.perform(MockMvcRequestBuilders.delete("$url/game/1"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("$url/games/1"))
             .andExpect(status().isOk)
     }
 
     @Test
     fun delete_WhenInvalidInput_ThenReturns400() {
         whenever(gameService.delete(anyInt())).thenReturn(sampleDto)
-        mockMvc.perform(MockMvcRequestBuilders.delete("$url/game/mockBadRequest"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("$url/games/mockBadRequest"))
             .andExpect(status().isBadRequest)
     }
 
     @Test
     fun delete_WhenUnknownId_ThenReturns404() {
         whenever(gameService.delete(anyInt())).thenReturn(null)
-        mockMvc.perform(MockMvcRequestBuilders.delete("$url/game/1"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("$url/games/1"))
             .andExpect(status().isNotFound)
     }
 
@@ -135,23 +133,24 @@ class GameControllerTests (@Autowired val mockMvc: MockMvc) {
 
     @Test
     fun update_WhenValidInput_ThenReturns200() {
-        whenever(gameService.update(any(), anyInt())).thenReturn(sampleDto)
+        Log.log.debug("$url/games/1")
         mockMvc.perform(
-            MockMvcRequestBuilders.put("$url/game").content(
-                gson.toJson(sampleDto)
+
+            MockMvcRequestBuilders.put("$url/games/1").content(
+                gson.toJson(sampleDto.toUpdateGameDto())
             )
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
         )
-            .andExpect(status().isOk)
+            .andExpect(status().is2xxSuccessful)
 
     }
 
     @Test
     fun update_WhenInvalidInput_ThenReturns400() {
-        whenever(gameService.update(any(), anyInt())).thenReturn(sampleDto)
+
         mockMvc.perform(
-            MockMvcRequestBuilders.put("$url/game").content(
+            MockMvcRequestBuilders.put("$url/games/1").content(
                 "Bad Input"
             )
                 .contentType(MediaType.APPLICATION_JSON)
@@ -163,16 +162,14 @@ class GameControllerTests (@Autowired val mockMvc: MockMvc) {
 
     @Test
     fun update_WhenUnknownId_ThenReturns404() {
-        whenever(gameService.update(any(), anyInt())).thenReturn(null)
         mockMvc.perform(
-            MockMvcRequestBuilders.put("$url/game").content(
+            MockMvcRequestBuilders.put("$url/games/1").content(
                 gson.toJson(sampleDto)
             )
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
         )
             .andExpect(status().isNotFound)
-
     }
 
     @Test
@@ -201,35 +198,11 @@ class GameControllerTests (@Autowired val mockMvc: MockMvc) {
 
     }
 
-    @Test
-    fun paginate_WhenInvalidInput_ThenReturns400() {
 
-        whenever(gameService.listAll(anyInt(), anyInt())).thenReturn(listOf(sampleDto, sampleDto))
-
-        mockMvc.perform(
-            MockMvcRequestBuilders.get("$url/games?page=Bad&count=2").content(
-                gson.toJson(sampleDto)
-            )
-        )
-            .andExpect(status().isBadRequest)
-        mockMvc.perform(
-            MockMvcRequestBuilders.get("$url/games?page=1&count=Input").content(
-                gson.toJson(sampleDto)
-            )
-        )
-            .andExpect(status().isBadRequest)
-        mockMvc.perform(
-            MockMvcRequestBuilders.get("$url/games?page=Bad&count=Input").content(
-                gson.toJson(sampleDto)
-            )
-        )
-            .andExpect(status().isBadRequest)
-
-    }
 
     @Test
     fun deleteAll_WhenCalled_ThenReturns200() {
-        mockMvc.perform(MockMvcRequestBuilders.delete("$url/games"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("$url/games/batch"))
             .andExpect(status().isOk)
 
     }
@@ -238,7 +211,7 @@ class GameControllerTests (@Autowired val mockMvc: MockMvc) {
     fun createMultiple_WhenValidInput_ThenReturns200() {
 
         mockMvc.perform(
-            MockMvcRequestBuilders.post("$url/games")
+            MockMvcRequestBuilders.post("$url/games/import")
                 .content(gson.toJson(listOf(sampleDto, sampleDto, sampleDto, sampleDto)))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
@@ -251,7 +224,7 @@ class GameControllerTests (@Autowired val mockMvc: MockMvc) {
     fun createMultiple_WhenInvalidInput_ThenReturns400() {
 
         mockMvc.perform(
-            MockMvcRequestBuilders.post("$url/games")
+            MockMvcRequestBuilders.post("$url/games/import")
                 .content("Bad Input")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)

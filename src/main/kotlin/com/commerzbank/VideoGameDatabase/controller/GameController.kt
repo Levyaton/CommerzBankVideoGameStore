@@ -67,12 +67,12 @@ class GameController() {
 
 
 
-    @PostMapping("/games/import")
+    @PostMapping("/games")
     fun create(@RequestBody dto: GameDto){
         service.create(dto)
     }
 
-    @PostMapping("/games/batch")
+    @PostMapping("/games/import")
     fun createMultiple(@RequestBody dtos: List<GameDto>){
         for(dto in dtos)
             service.create(dto)
