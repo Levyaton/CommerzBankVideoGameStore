@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import org.springframework.test.web.servlet.setup.MockMvcBuilders
 
 
 @WebMvcTest(GameController::class)
@@ -44,7 +45,9 @@ open class GameControllerTests {
 
     private val sampleDto = GameDto(1, "testName", "testPublisher", 1, 1.0)
 
-
+    fun setup(){
+        mockMvc = MockMvcBuilders.standaloneSetup(GameController()).build();
+    }
 
 
 
@@ -127,7 +130,7 @@ open class GameControllerTests {
 
     @Test
     open fun update_WhenValidInput_ThenReturns200() {
-        whenever(gameService.update(sampleDto)).thenReturn(sampleDto)
+        whenever(gameService.update(any(), anyInt())).thenReturn(sampleDto)
         mockMvc.perform(
             MockMvcRequestBuilders.put("$url/game").content(
                 gson.toJson(sampleDto)
@@ -141,7 +144,7 @@ open class GameControllerTests {
 
     @Test
     open fun update_WhenInvalidInput_ThenReturns400() {
-        whenever(gameService.update(sampleDto)).thenReturn(sampleDto)
+        whenever(gameService.update(any(), anyInt())).thenReturn(sampleDto)
         mockMvc.perform(
             MockMvcRequestBuilders.put("$url/game").content(
                 "Bad Input"
@@ -155,7 +158,7 @@ open class GameControllerTests {
 
     @Test
     open fun update_WhenUnknownId_ThenReturns404() {
-        whenever(gameService.update(sampleDto)).thenReturn(null)
+        whenever(gameService.update(any(), anyInt())).thenReturn(null)
         mockMvc.perform(
             MockMvcRequestBuilders.put("$url/game").content(
                 gson.toJson(sampleDto)
@@ -183,7 +186,7 @@ open class GameControllerTests {
     @Test
     open fun paginate_WhenValidInput_ThenReturns200() {
 
-        whenever(gameService.paginate(anyInt(), anyInt())).thenReturn(listOf(sampleDto, sampleDto))
+        whenever(gameService.listAll(anyInt(), anyInt())).thenReturn(listOf(sampleDto, sampleDto))
         mockMvc.perform(
             MockMvcRequestBuilders.get("$url/games?page=1&count=2").content(
                 gson.toJson(sampleDto)
@@ -196,7 +199,7 @@ open class GameControllerTests {
     @Test
     open fun paginate_WhenInvalidInput_ThenReturns400() {
 
-        whenever(gameService.paginate(anyInt(), anyInt())).thenReturn(listOf(sampleDto, sampleDto))
+        whenever(gameService.listAll(anyInt(), anyInt())).thenReturn(listOf(sampleDto, sampleDto))
 
         mockMvc.perform(
             MockMvcRequestBuilders.get("$url/games?page=Bad&count=2").content(

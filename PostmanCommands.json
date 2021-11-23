@@ -1,0 +1,467 @@
+{
+	"info": {
+		"_postman_id": "f36e7507-8a46-4ce3-a694-693307598b95",
+		"name": "GamesTestProject",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GET all elements",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/v1/games",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"games"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Paginate the database",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/v1/games?page=0&size=3\n",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"games"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "0"
+						},
+						{
+							"key": "size",
+							"value": "3\n"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET one element",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/v1/games/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"games",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE one element",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/v1/games/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"games",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CREATE one element",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"testName\",\r\n    \"publisher\":\"testPublisher\",\r\n    \"price\":\"0.0f\",\r\n    \"rating\":\"0\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/v1/games",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"games"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CREATE batch of elements",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[{\r\n    \"name\": \"testName\",\r\n    \"publisher\":\"testPublisher\",\r\n    \"price\":\"0.0f\",\r\n    \"rating\":\"0\"\r\n},{\r\n    \"name\": \"testName2\",\r\n    \"publisher\":\"testPublisher\",\r\n    \"price\":\"0.0f\",\r\n    \"rating\":\"0\"\r\n},{\r\n    \"name\": \"testName3\",\r\n    \"publisher\":\"testPublisher\",\r\n    \"price\":\"0.0f\",\r\n    \"rating\":\"0\"\r\n},{\r\n    \"name\": \"testName4\",\r\n    \"publisher\":\"testPublisher\",\r\n    \"price\":\"0.0f\",\r\n    \"rating\":\"0\"\r\n},{\r\n    \"name\": \"testName\",\r\n    \"publisher\":\"testPublisher\",\r\n    \"price\":\"0.0f\",\r\n    \"rating\":\"0\"\r\n},{\r\n    \"name\": \"testName5\",\r\n    \"publisher\":\"testPublisher\",\r\n    \"price\":\"0.0f\",\r\n    \"rating\":\"0\"\r\n},{\r\n    \"name\": \"testName\",\r\n    \"publisher\":\"testPublisher\",\r\n    \"price\":\"0.0f\",\r\n    \"rating\":\"0\"\r\n},{\r\n    \"name\": \"testName6\",\r\n    \"publisher\":\"testPublisher\",\r\n    \"price\":\"0.0f\",\r\n    \"rating\":\"0\"\r\n},{\r\n    \"name\": \"testName7\",\r\n    \"publisher\":\"testPublisher\",\r\n    \"price\":\"0.0f\",\r\n    \"rating\":\"0\"\r\n},{\r\n    \"name\": \"testName8\",\r\n    \"publisher\":\"testPublisher\",\r\n    \"price\":\"0.0f\",\r\n    \"rating\":\"0\"\r\n},{\r\n    \"name\": \"testName9\",\r\n    \"publisher\":\"testPublisher\",\r\n    \"price\":\"0.0f\",\r\n    \"rating\":\"0\"\r\n},{\r\n    \"name\": \"testName10\",\r\n    \"publisher\":\"testPublisher\",\r\n    \"price\":\"0.0f\",\r\n    \"rating\":\"0\"\r\n},{\r\n    \"name\": \"testName10\",\r\n    \"publisher\":\"testPublisher\",\r\n    \"price\":\"0.0f\",\r\n    \"rating\":\"0\"\r\n},{\r\n    \"name\": \"testName11\",\r\n    \"publisher\":\"testPublisher13\",\r\n    \"price\":\"0.0f\",\r\n    \"rating\":\"0\"\r\n},{\r\n    \"name\": \"testName12\",\r\n    \"publisher\":\"testPublisher\",\r\n    \"price\":\"0.0f\",\r\n    \"rating\":\"0\"\r\n},{\r\n    \"name\": \"testName12\",\r\n    \"publisher\":\"testPublisher1\",\r\n    \"price\":\"0.0f\",\r\n    \"rating\":\"0\"\r\n},{\r\n    \"name\": \"testName12\",\r\n    \"publisher\":\"testPublisher13\",\r\n    \"price\":\"0.0f\",\r\n    \"rating\":\"0\"\r\n},{\r\n    \"name\": \"testName14\",\r\n    \"publisher\":\"testPublisher46\",\r\n    \"price\":\"0.0f\",\r\n    \"rating\":\"0\"\r\n},{\r\n    \"name\": \"testName156\",\r\n    \"publisher\":\"testPublisher15\",\r\n    \"price\":\"0.0f\",\r\n    \"rating\":\"0\"\r\n},{\r\n    \"name\": \"testName16\",\r\n    \"publisher\":\"testPublisher\",\r\n    \"price\":\"0.0f\",\r\n    \"rating\":\"0\"\r\n},{\r\n    \"name\": \"testName18\",\r\n    \"publisher\":\"testPublisher\",\r\n    \"price\":\"0.0f\",\r\n    \"rating\":\"0\"\r\n},{\r\n    \"name\": \"testName17\",\r\n    \"publisher\":\"testPublisher\",\r\n    \"price\":\"0.0f\",\r\n    \"rating\":\"0\"\r\n},{\r\n    \"name\": \"testName18\",\r\n    \"publisher\":\"testPublisher\",\r\n    \"price\":\"0.0f\",\r\n    \"rating\":\"0\"\r\n},{\r\n    \"name\": \"testName19\",\r\n    \"publisher\":\"testPublisher\",\r\n    \"price\":\"0.0f\",\r\n    \"rating\":\"0\"\r\n},{\r\n    \"name\": \"testName20\",\r\n    \"publisher\":\"testPublisher\",\r\n    \"price\":\"0.0f\",\r\n    \"rating\":\"0\"\r\n},{\r\n    \"name\": \"testName21\",\r\n    \"publisher\":\"testPublisher\",\r\n    \"price\":\"0.0f\",\r\n    \"rating\":\"0\"\r\n},{\r\n    \"name\": \"testName22\",\r\n    \"publisher\":\"testPublisher\",\r\n    \"price\":\"0.0f\",\r\n    \"rating\":\"0\"\r\n},{\r\n    \"name\": \"testName23\",\r\n    \"publisher\":\"testPublisher\",\r\n    \"price\":\"0.0f\",\r\n    \"rating\":\"0\"\r\n},{\r\n    \"name\": \"testName24\",\r\n    \"publisher\":\"testPublisher\",\r\n    \"price\":\"0.0f\",\r\n    \"rating\":\"0\"\r\n},{\r\n    \"name\": \"testName25\",\r\n    \"publisher\":\"testPublisher68\",\r\n    \"price\":\"1.0f\",\r\n    \"rating\":\"1\"\r\n},{\r\n    \"name\": \"testName26\",\r\n    \"publisher\":\"testPublisher2\",\r\n    \"price\":\"2.0f\",\r\n    \"rating\":\"5\"\r\n},{\r\n    \"name\": \"testName27\",\r\n    \"publisher\":\"testPublisher\",\r\n    \"price\":\"0.0f\",\r\n    \"rating\":\"0\"\r\n}]"
+				},
+				"url": {
+					"raw": "localhost:8080/api/v1/games/import",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"games",
+						"import"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "COUNT elements in database",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/v1/games/count",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"games",
+						"count"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UPDATE one element",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\" : 1,\r\n    \"name\": \"testName\",\r\n    \"publisher\":\"testPublisher\",\r\n    \"price\":\"0.0f\",\r\n    \"rating\":\"0\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/v1/games/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"games",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE all elements",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/v1/games/batch",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"games",
+						"batch"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET elements with a given Name",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/v1/games?name=test",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"games"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "test"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET and Paginate games with a given Name",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/v1/games?name=test&page=0&size=5",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"games"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "test"
+						},
+						{
+							"key": "page",
+							"value": "0"
+						},
+						{
+							"key": "size",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET elements with a given Publisher",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/v1/games?publisher=test",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"games"
+					],
+					"query": [
+						{
+							"key": "publisher",
+							"value": "test"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET and Paginate elements with a given Publisher",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/v1/games?name=test&page=0&size-5",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"games"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "test"
+						},
+						{
+							"key": "page",
+							"value": "0"
+						},
+						{
+							"key": "size-5",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET elements with a given Price",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/v1/games?price=0.5",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"games"
+					],
+					"query": [
+						{
+							"key": "price",
+							"value": "0.5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET and Paginate elemenets with a given Price",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/v1/games?price=0.5&page=5&size=0",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"games"
+					],
+					"query": [
+						{
+							"key": "price",
+							"value": "0.5"
+						},
+						{
+							"key": "page",
+							"value": "5"
+						},
+						{
+							"key": "size",
+							"value": "0"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET elements with a given Rating",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/v1/games?rating=5",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"games"
+					],
+					"query": [
+						{
+							"key": "rating",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET and Paginate elements with a given Rating",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/v1/games?rating=5&page=0&size=5",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"games"
+					],
+					"query": [
+						{
+							"key": "rating",
+							"value": "5"
+						},
+						{
+							"key": "page",
+							"value": "0"
+						},
+						{
+							"key": "size",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

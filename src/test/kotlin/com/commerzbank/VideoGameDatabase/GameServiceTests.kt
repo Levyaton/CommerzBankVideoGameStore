@@ -35,7 +35,7 @@ import kotlin.test.assertNull
 @RunWith(SpringRunner::class)
 open class GameServiceTests {
 
-    @Autowired
+
     private lateinit var gameService: GameService
 
 
@@ -45,6 +45,12 @@ open class GameServiceTests {
 
     @MockBean
     private lateinit var gameDao: GameDao
+
+
+    @BeforeEach
+    fun setup(){
+        gameService = GameService()
+    }
 
     @Test
     open fun dropAll_WhenAny_ThenEmptiesDatabase() {
@@ -100,7 +106,7 @@ open class GameServiceTests {
         val list = listOf(entity1,entity2,entity3,entity4,entity5,entity6)
         whenever(gameDao.findAll()).thenReturn(list)
 
-        val sublist = gameService.paginate(page = 2, count = 2)
+        val sublist = gameService.listAll(page = 2, size = 2)
         assertEquals(2,sublist.size)
         assertEquals("testName3", sublist[0].name)
         assertEquals("testName4", sublist[1].name)
@@ -124,7 +130,7 @@ open class GameServiceTests {
         val list = listOf(entity1,entity2,entity3,entity4,entity5,entity6)
         whenever(gameDao.findAll()).thenReturn(list)
 
-        val sublist = gameService.paginate(page = 200, count = 200)
+        val sublist = gameService.listAll(page = 200, size = 200)
         assertEquals(0,sublist.size)
     }
 
@@ -146,7 +152,7 @@ open class GameServiceTests {
         val list = listOf(entity1,entity2,entity3,entity4,entity5,entity6)
         whenever(gameDao.findAll()).thenReturn(list)
 
-        val sublist = gameService.paginate(page = 200, count = 3)
+        val sublist = gameService.listAll(page = 200, size = 3)
         assertEquals(0,sublist.size)
     }
 
@@ -168,7 +174,7 @@ open class GameServiceTests {
         val list = listOf(entity1,entity2,entity3,entity4,entity5,entity6)
         whenever(gameDao.findAll()).thenReturn(list)
 
-        val sublist = gameService.paginate(page = 1, count = 200)
+        val sublist = gameService.listAll(page = 1, size = 200)
         assertEquals(6,sublist.size)
     }
 
@@ -190,7 +196,7 @@ open class GameServiceTests {
         val list = listOf(entity1,entity2,entity3,entity4,entity5,entity6)
         whenever(gameDao.findAll()).thenReturn(list)
 
-        val sublist = gameService.paginate(page = 2, count = 200)
+        val sublist = gameService.listAll(page = 2, size = 200)
         assertEquals(0,sublist.size)
     }
 
@@ -212,7 +218,7 @@ open class GameServiceTests {
         val list = listOf(entity1,entity2,entity3,entity4,entity5,entity6)
         whenever(gameDao.findAll()).thenReturn(list)
 
-        val sublist = gameService.paginate(page = 2, count = 4)
+        val sublist = gameService.listAll(page = 2, size = 4)
         assertEquals(2,sublist.size)
     }
 
@@ -225,7 +231,7 @@ open class GameServiceTests {
         dto.name = newName
         whenever(gameDao.getOne(anyInt())).thenReturn(sampleDto.toEntity())
         whenever(gameDao.existsById(anyInt())).thenReturn(true)
-        val result = gameService.update(dto)
+        val result = gameService.update(dto.toUpdateGameDto(),1)
         assertNotNull(result)
         assertEquals(newName,result.name)
     }
@@ -242,7 +248,7 @@ open class GameServiceTests {
         }
         whenever(gameDao.getOne(anyInt())).thenReturn(sampleDto.toEntity())
         whenever(gameDao.existsById(anyInt())).thenReturn(false)
-        val result = gameService.update(sampleDto)
+        val result = gameService.update(sampleDto.toUpdateGameDto(),1)
         assertNull(result)
     }
 

@@ -17,6 +17,7 @@
 		<java.version>1.8</java.version>
 		<kotlin.version>1.6.0-RC2</kotlin.version>
 	</properties>
+
 	<dependencies>
 
 		<dependency>
@@ -99,9 +100,26 @@
 					</execution>
 				</executions>
 				<configuration>
+					<args>
+						<arg>-Xjsr305=strict</arg>
+					</args>
 					<jvmTarget>1.8</jvmTarget>
+					<compilerPlugins>
+						<plugin>spring</plugin>
+						<plugin>all-open</plugin>
+					</compilerPlugins>
+					<pluginOptions>
+						<option>all-open:annotation=com.commerzbank.VideoGameDatabase.dto.UpdateGameDto</option>
+						<option>all-open:annotation=com.commerzbank.VideoGameDatabase.dto.GameDto</option>
+						<option>all-open:annotation=javax.persistence.Entity</option>
+						<option>all-open:annotation=javax.persistence.MappedSuperclass</option>
+						<option>all-open:annotation=org.springframework.stereotype.Service</option>
+						<option>all-open:annotation=org.springframework.stereotype.Controller</option>
+					</pluginOptions>
 				</configuration>
 			</plugin>
+
+
 		</plugins>
 	</build>
 
