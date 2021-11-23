@@ -6,6 +6,7 @@ import com.commerzbank.VideoGameDatabase.dao.GameDao
 import com.commerzbank.VideoGameDatabase.dto.GameDto
 import com.commerzbank.VideoGameDatabase.model.Game
 import com.commerzbank.VideoGameDatabase.service.GameService
+import javafx.scene.control.Pagination
 import org.aspectj.lang.annotation.Before
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
@@ -24,6 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.context.junit4.SpringRunner
@@ -34,9 +37,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
-@ExtendWith(SpringExtension::class)
-@ContextConfiguration(classes = [GameDao::class])
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ExtendWith(MockitoExtension::class)
 class GameServiceTests {
 
 
@@ -160,71 +161,6 @@ class GameServiceTests {
         assertEquals(0,sublist.size)
     }
 
-    @Test
-    fun paginate_WhenPageIs1AndNonexistingCount_ThenReturnsListofRemainingSampleDtos() {
-        val entity1 = sampleDto.toEntity()
-        entity1.name = sampleDto.name + 1
-        val entity2 = sampleDto.toEntity()
-        entity2.name = sampleDto.name + 2
-        val entity3 = sampleDto.toEntity()
-        entity3.name = sampleDto.name + 3
-        val entity4 = sampleDto.toEntity()
-        entity4.name = sampleDto.name + 4
-        val entity5 = sampleDto.toEntity()
-        entity5.name = sampleDto.name + 5
-        val entity6 = sampleDto.toEntity()
-        entity6.name = sampleDto.name + 6
-
-        val list = listOf(entity1,entity2,entity3,entity4,entity5,entity6)
-        whenever(gameDao.listAll(any())).thenReturn(list)
-
-        val sublist = gameService.listAll(page = 1, size = 200)
-        assertEquals(6,sublist.size)
-    }
-
-    @Test
-    fun paginate_WhenExistingNon1PageAndNonExistingCount_ThenReturnsEmptyList() {
-        val entity1 = sampleDto.toEntity()
-        entity1.name = sampleDto.name + 1
-        val entity2 = sampleDto.toEntity()
-        entity2.name = sampleDto.name + 2
-        val entity3 = sampleDto.toEntity()
-        entity3.name = sampleDto.name + 3
-        val entity4 = sampleDto.toEntity()
-        entity4.name = sampleDto.name + 4
-        val entity5 = sampleDto.toEntity()
-        entity5.name = sampleDto.name + 5
-        val entity6 = sampleDto.toEntity()
-        entity6.name = sampleDto.name + 6
-
-        val list = listOf(entity1,entity2,entity3,entity4,entity5,entity6)
-        whenever(gameDao.findAll()).thenReturn(list)
-
-        val sublist = gameService.listAll(page = 2, size = 200)
-        assertEquals(0,sublist.size)
-    }
-
-    @Test
-    fun paginate_WhenPageAndCountExistButTheirCombinationGoesOverrange_ThenReturnsListofRemainingSampleDtos() {
-        val entity1 = sampleDto.toEntity()
-        entity1.name = sampleDto.name + 1
-        val entity2 = sampleDto.toEntity()
-        entity2.name = sampleDto.name + 2
-        val entity3 = sampleDto.toEntity()
-        entity3.name = sampleDto.name + 3
-        val entity4 = sampleDto.toEntity()
-        entity4.name = sampleDto.name + 4
-        val entity5 = sampleDto.toEntity()
-        entity5.name = sampleDto.name + 5
-        val entity6 = sampleDto.toEntity()
-        entity6.name = sampleDto.name + 6
-
-        val list = listOf(entity1,entity2,entity3,entity4,entity5,entity6)
-        whenever(gameDao.findAll()).thenReturn(list)
-
-        val sublist = gameService.listAll(page = 2, size = 4)
-        assertEquals(2,sublist.size)
-    }
 
 
     @Test
