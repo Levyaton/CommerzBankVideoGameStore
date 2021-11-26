@@ -3,7 +3,9 @@ package com.commerzbank.VideoGameDatabase
 import com.commerzbank.VideoGameDatabase.Helper.Companion.whenever
 import com.commerzbank.VideoGameDatabase.controller.GameController
 import com.commerzbank.VideoGameDatabase.dto.GameDto
-import com.commerzbank.VideoGameDatabase.logger.Log
+import com.commerzbank.VideoGameDatabase.dto.UpdateGameDto
+import com.commerzbank.VideoGameDatabase.mappers.GameMapper.Companion.mapper
+
 import com.commerzbank.VideoGameDatabase.service.GameService
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.gson.Gson
@@ -133,11 +135,11 @@ class GameControllerTests (@Autowired val mockMvc: MockMvc) {
 
     @Test
     fun update_WhenValidInput_ThenReturns200() {
-        Log.log.debug("$url/games/1")
+        whenever(gameService.exists(anyInt())).thenReturn(true)
         mockMvc.perform(
 
             MockMvcRequestBuilders.put("$url/games/1").content(
-                gson.toJson(sampleDto.toUpdateGameDto())
+                gson.toJson(mapper.dtoToUpdate(sampleDto))
             )
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)

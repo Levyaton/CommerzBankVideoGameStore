@@ -2,20 +2,12 @@ package com.commerzbank.VideoGameDatabase.controller
 
 import com.commerzbank.VideoGameDatabase.dto.GameDto
 import com.commerzbank.VideoGameDatabase.dto.UpdateGameDto
-import com.commerzbank.VideoGameDatabase.logger.Log
-import com.commerzbank.VideoGameDatabase.model.Game
+import com.commerzbank.VideoGameDatabase.utils.Utils
 import com.commerzbank.VideoGameDatabase.service.GameService
-import org.slf4j.LoggerFactory
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.dao.EmptyResultDataAccessException
-import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.server.ResponseStatusException
-import java.util.logging.Logger.getLogger
-import javax.persistence.EntityNotFoundException
-import javax.transaction.Transactional
 import org.springframework.http.ResponseEntity
 
 
@@ -60,7 +52,7 @@ class GameController() {
     fun delete(@PathVariable id: Int): ResponseEntity<String> {
         if(service.delete(id)==null)
             return ResponseEntity<String>(HttpStatus.NOT_FOUND)
-            Log.log.info("deleted id $id")
+            Utils.log.info("deleted id $id")
         return ResponseEntity<String>("Deleted game with id $id",HttpStatus.OK)
 
     }
@@ -85,8 +77,9 @@ class GameController() {
 
     @PutMapping("/games/{id}")
     fun update(@RequestBody dto: UpdateGameDto, @PathVariable id: Int): ResponseEntity<String> {
-        if( service.update(dto, id)==null)
+        if( !service.exists(id))
             return ResponseEntity<String>(HttpStatus.NOT_FOUND)
+        service.update(dto,id)
         return ResponseEntity<String>("updated game with id $id",HttpStatus.OK)
     }
 

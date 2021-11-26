@@ -3,25 +3,13 @@ package com.commerzbank.VideoGameDatabase.dto
 import com.commerzbank.VideoGameDatabase.model.Game
 import com.fasterxml.jackson.databind.JsonSerializer
 
+
 data class GameDto(
-                   var id: Int?,
-                   var name:String,
-                   var publisher: String,
-                   var rating:Int,
-                   var price:Double){
-    constructor():
-            this(null,"", "",0,0.0)
-    constructor(game: Game):
-            this(game.id,game.name,game.publisher,game.rating,game.price)
-
-    fun toEntity(): Game{
-        return Game(name,publisher,rating, price)
-    }
-
-    fun toUpdateGameDto(): UpdateGameDto{
-        return UpdateGameDto(name,publisher,rating, price)
-    }
+                   var id: Int = -1000,
+                   var name:String = "",
+                   var publisher: String = "",
+                   var rating:Int = 0,
+                   var price:Double = 0.0)
 
 
-}
 

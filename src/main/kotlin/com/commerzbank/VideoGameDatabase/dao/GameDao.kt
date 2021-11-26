@@ -14,7 +14,6 @@ interface GameDao: PagingAndSortingRepository<Game, Int>, JpaRepository<Game, In
     fun findByPrice(price: Double): List<Game>
     fun findByPublisher(publisher:String): List<Game>
 
-    fun listAll(page:Pageable): List<Game>
     fun findByName(name: String, page: Pageable): List<Game>
     fun findByRating(id: Int, page: Pageable): List<Game>
     fun findByPrice(price: Double, page: Pageable): List<Game>

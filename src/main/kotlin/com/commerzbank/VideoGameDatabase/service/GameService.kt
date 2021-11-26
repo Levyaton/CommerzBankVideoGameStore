@@ -4,7 +4,7 @@ package com.commerzbank.VideoGameDatabase.service
 import com.commerzbank.VideoGameDatabase.dao.GameDao
 import com.commerzbank.VideoGameDatabase.dto.GameDto
 import com.commerzbank.VideoGameDatabase.dto.UpdateGameDto
-import com.commerzbank.VideoGameDatabase.logger.Log
+import com.commerzbank.VideoGameDatabase.mappers.GameMapper.Companion.mapper
 import com.commerzbank.VideoGameDatabase.model.Game
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.EmptyResultDataAccessException
@@ -35,21 +35,21 @@ class GameService(){
     @Transactional
     fun get(id: Int): GameDto?{
         if(dao.existsById(id))
-            return GameDto(dao.getOne(id))
+            return mapper.entityToDTO(dao.getOne(id))
         return null
     }
 
     @Transactional
     fun listAll(): List<GameDto>{
         return dao.findAll().map {
-            GameDto(it)
+            mapper.entityToDTO(it)
         }
     }
 
     @Transactional
     fun listAll(page: Int, size: Int): List<GameDto>{
-        return dao.listAll(PageRequest.of(page,size)).map {
-            GameDto(it)
+        return dao.findAll(PageRequest.of(page,size)).content.map {
+            mapper.entityToDTO(it)
         }
     }
 
@@ -57,7 +57,7 @@ class GameService(){
 
     @Transactional
     fun create(dto: GameDto){
-        val entity = dto.toEntity()
+        val entity = mapper.dtoToEntity(dto)
         dao.save(entity)
     }
 
@@ -71,7 +71,7 @@ class GameService(){
             game.publisher = dto.publisher.replace(("[^A-Za-z0-9 ]").toRegex(), "")
             game.rating = dto.rating
             dao.save(game)
-            GameDto(game)
+            mapper.entityToDTO(game)
         } else{
             null
         }
@@ -82,7 +82,7 @@ class GameService(){
         if(dao.existsById(id)){
             val game = dao.getOne(id)
             dao.deleteById(id)
-            return GameDto(game)
+            return mapper.entityToDTO(game)
         }
         return null
 
@@ -91,38 +91,38 @@ class GameService(){
 
     @Transactional
     fun findByName(name: String): List<GameDto>{
-        return dao.findByName(name.replace(("[^A-Za-z0-9 ]").toRegex(), "")).map { GameDto(it) }
+        return dao.findByName(name.replace(("[^A-Za-z0-9 ]").toRegex(), "")).map { mapper.entityToDTO(it) }
     }
     @Transactional
     fun findByName(name: String, page: Int, size: Int): List<GameDto>{
         val regexedName = name.replace(("[^A-Za-z0-9 ]").toRegex(), "")
-        return dao.findByName(regexedName, PageRequest.of(page, size)).map { GameDto(it) }
+        return dao.findByName(regexedName, PageRequest.of(page, size)).map { mapper.entityToDTO(it) }
     }
 
     @Transactional
     fun findByRating(rating: Int, page: Int, size: Int): List<GameDto>{
-        return dao.findByRating(rating, PageRequest.of(page, size)).map { GameDto(it) }
+        return dao.findByRating(rating, PageRequest.of(page, size)).map { mapper.entityToDTO(it) }
     }
     @Transactional
     fun findByRating(rating: Int): List<GameDto>{
-        return dao.findByRating(rating).map { GameDto(it) }
+        return dao.findByRating(rating).map { mapper.entityToDTO(it) }
     }
     @Transactional
     fun findByPrice(price: Double): List<GameDto>{
-        return dao.findByPrice(price).map { GameDto(it) }
+        return dao.findByPrice(price).map { mapper.entityToDTO(it) }
     }
     @Transactional
     fun findByPrice(price: Double, page: Int, size: Int): List<GameDto>{
-        return dao.findByPrice(price, PageRequest.of(page, size)).map { GameDto(it) }
+        return dao.findByPrice(price, PageRequest.of(page, size)).map { mapper.entityToDTO(it) }
     }
     @Transactional
     fun findByPublisher(publisher: String): List<GameDto>{
-        return dao.findByPublisher(publisher.replace(("[^A-Za-z0-9 ]").toRegex(), "")).map { GameDto(it) }
+        return dao.findByPublisher(publisher.replace(("[^A-Za-z0-9 ]").toRegex(), "")).map { mapper.entityToDTO(it) }
     }
     @Transactional
     fun findByPublisher(publisher: String, page: Int, size: Int): List<GameDto>{
         val regexedPublisher= publisher.replace(("[^A-Za-z0-9 ]").toRegex(), "")
-        return dao.findByPublisher(regexedPublisher, PageRequest.of(page, size)).map { GameDto(it) }
+        return dao.findByPublisher(regexedPublisher, PageRequest.of(page, size)).map { mapper.entityToDTO(it) }
     }
 
     @Transactional
